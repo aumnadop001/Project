@@ -1,18 +1,19 @@
 import React from "react";
 import Layout from "./../Template/Layout";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const qrCodeURL = "http://localhost:5173/Product"; 
-
+  const qrCodeURL = "http://localhost:5173/Product";
+  const navigate = useNavigate();
   return (
     <Layout>
       {/* ส่วนหัวของหน้า */}
       <div className="text-center mt-10">
         <h1 className="text-5xl font-bold text-[#2E8B57] mb-6">
-        Fluke & James Bistro
+          Fluke & James Bistro
         </h1>
         <p className="text-lg text-gray-700">
-        Scan the QR code to order a meal set.
+          Scan the QR code to order a meal set.
         </p>
       </div>
 
@@ -39,10 +40,14 @@ const Home = () => {
         </p> */}
       </div>
 
-      {/* ปุ่มไปยังหน้าเมนู */}
+      {/* ปุ่มไปยังหน้าเมนู  */}
       <div className="text-center mt-10">
         <a
-          href={qrCodeURL}
+          // href={qrCodeURL}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/Product");
+          }}
           target="_blank"
           rel="noopener noreferrer"
           className="bg-[#2E8B57] hover:bg-[#3CB371] text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300"

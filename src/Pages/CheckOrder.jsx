@@ -1,51 +1,40 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Layout from '../Template/Layout';
 import Swal from 'sweetalert2'; // เพิ่มการนำเข้า SweetAlert2
-
+import { useSelectedItems } from '../useContext/SelectedItemsContext';
 const CheckOrder = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { selectedItems, replaceItem, removeItem } = useSelectedItems();
 
-  const [selectedItems, setSelectedItems] = useState(
-    location.state?.selectedItems.map((item) => ({ ...item, quantity: 1 })) || []
-  );
-  
-  useEffect(() => {
-    console.log(selectedItems)
-   localStorage.setItem("Item",selectedItems) 
-//    const itemSelect = localStorage.getItem('Item')
-// if(itemSelect ){
-//   setSelectedItems(itemSelect )
-// }
-  }, [selectedItems])
+
   // เพิ่มจำนวน
   const handleIncreaseQuantity = (item) => {
-    setSelectedItems((prevItems) =>
-      prevItems.map((selected) =>
-        selected.name === item.name
-          ? { ...selected, quantity: selected.quantity + 1 }
-          : selected
-      )
-    );
+    const objectIncrease = {
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity + 1
+    }
+    replaceItem(objectIncrease);
   };
 
   // ลดจำนวน
   const handleDecreaseQuantity = (item) => {
-    setSelectedItems((prevItems) =>
-      prevItems.map((selected) =>
-        selected.name === item.name && selected.quantity > 1
-          ? { ...selected, quantity: selected.quantity - 1 }
-          : selected
-      )
-    );
+    if (item.quantity === 1) {
+      removeItem(item);
+    }
+    const objectDecrease = {
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity - 1
+    }
+    replaceItem(objectDecrease);
   };
 
   // ลบรายการ
   const handleRemoveItem = (item) => {
-    setSelectedItems((prevItems) =>
-      prevItems.filter((selected) => selected.name !== item.name)
-    );
+    removeItem(item);
   };
 
   // ยืนยันการสั่งอาหาร
@@ -85,7 +74,7 @@ const CheckOrder = () => {
                     {item.name}
                   </p>
                   <p className="text-sm text-gray-600">
-                    Price: {item.price} 
+                    Price: {item.price}
                   </p>
                   <p className="text-sm text-gray-600">
                     Quantity: {item.quantity}
