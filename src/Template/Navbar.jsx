@@ -22,7 +22,7 @@ function Navbar() {
                 `text-[#FFFFFF] hover:text-[#FAFAD2] ${isActive ? "border-b-2 border-[#FAFAD2]" : ""
                 }`
               }
-            // to="/"
+            to="/check-order"
             >
               <div className='flex items-center'>
                 <FaShoppingCart className='mr-2' /> {totalQuantity}

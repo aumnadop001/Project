@@ -31,6 +31,9 @@ export const SelectedItemsProvider = ({ children }) => {
       prevItems.filter((selected) => selected.name !== item.name)
     );
   };
+  const removeAll = (item) => {
+    setSelectedItems([])
+  };
   const replaceItem = (item) => {
     setSelectedItems((prevItems) =>
       prevItems.map((selected) =>
@@ -40,7 +43,7 @@ export const SelectedItemsProvider = ({ children }) => {
       ))
   }
   return (
-    <SelectedItemsContext.Provider value={{ selectedItems, addItem, removeItem, replaceItem }}>
+    <SelectedItemsContext.Provider value={{ selectedItems, addItem, removeItem, replaceItem, removeAll }}>
       {children}
     </SelectedItemsContext.Provider>
   );

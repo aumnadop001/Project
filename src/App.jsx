@@ -1,10 +1,12 @@
 import React from 'react';
-import Home from './Pages/Home';
-import Product from './Pages/Product';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import CheckOrder from './Pages/CheckOrder';
+import Home from './Pages/Home';
 import NotFound from './Pages/NotFound';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Product from './Pages/Product';
 import { SelectedItemsProvider } from './useContext/SelectedItemsContext';
+import AddProduct from './Pages/add';
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -18,6 +20,8 @@ const App = () => {
 
           {/* หน้า Check the Order */}
           <Route path="/check-order" element={<CheckOrder />} />
+
+          <Route path="/add" element={<AddProduct />} />
 
           {/* หน้า Not Found สำหรับ URL ที่ไม่ตรงกับเส้นทางที่กำหนด */}
           <Route path="*" element={<NotFound />} />

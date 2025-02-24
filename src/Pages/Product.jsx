@@ -1,11 +1,25 @@
-import React, { useState, useContext } from 'react';
+import { Button } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Layout from './../Template/Layout';
 import FoodSet from '../Components/FoodSet';
+import { callDelete, callGet } from '../services/axios.service';
 import { useSelectedItems } from '../useContext/SelectedItemsContext';
+import Layout from './../Template/Layout';
+
 const Product = () => {
   const { selectedItems, addItem, removeItem } = useSelectedItems();
   const navigate = useNavigate();
+
+  const [data, setData] = useState([])
+  console.log(data)
+  const fetchData = async () => {
+    const res = await callGet('products')
+    setData(res)
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   // เพิ่มรายการ
   const handleAddItem = (item) => {
@@ -14,7 +28,13 @@ const Product = () => {
 
   // ลบรายการ
   const handleRemoveItem = (item) => {
-    removeItem(item);
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      removeItem(item);
+      console.log('item ->', item);
+      callDelete(`products/${item.id}`).then(() => {
+        fetchData();
+      });
+    }
   };
 
   // ไปยังหน้า CheckOrder พร้อมส่งข้อมูล selectedItems
@@ -29,48 +49,18 @@ const Product = () => {
         Menu
       </h1>
       <hr />
-
+      <Button onClick={() => navigate('/add')} variant="contained">เพิ่มสินค้า นะจ๊ะ อิอิ</Button>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 px-4">
-        <FoodSet
-          name="ไทยโอลด์สคูล"
-          price="129 บาท"
-          description=" ผัดไทยกุ้งสด, ปอเปี๊ยะสด, น้ำมะพร้าว"
-          image="src/Images/ไทย.png"
-          onAdd={() => handleAddItem({ name: 'ไทยโอลด์สคูล', price: '129 บาท', quantity: 1 })}
-          onRemove={() => handleRemoveItem({ name: 'ไทยโอลด์สคูล' })}
-        />
-        <FoodSet
-          name="เกาหลีชิคเก้น"
-          price="129 บาท"
-          description=" ไก่ทอดเกาหลี, กิมจิ, โซจู"
-          image="src/Images/เกาหลี.png"
-          onAdd={() => handleAddItem({ name: 'เกาหลีชิคเก้น', price: '129 บาท', quantity: 1 })}
-          onRemove={() => handleRemoveItem({ name: 'เกาหลีชิคเก้น' })}
-        />
-        <FoodSet
-          name="ซามูไรเซ็ต"
-          price="149 บาท"
-          description=" ซูชิรวม, ซุปมิโซะ, ชาเขียว"
-          image="src/Images/ญี่ปุ่น.png"
-          onAdd={() => handleAddItem({ name: 'ซามูไรเซ็ต', price: '149 บาท', quantity: 1 })}
-          onRemove={() => handleRemoveItem({ name: 'ซามูไรเซ็ต' })}
-        />
-        <FoodSet
-          name="อเมริกันบิ๊กไบท์"
-          price="149 บาท"
-          description="เบอร์เกอร์เนื้อ, เฟรนช์ฟรายส์, โคล่า"
-          image="src/Images/อเมริกัน.png"
-          onAdd={() => handleAddItem({ name: 'อเมริกันบิ๊กไบท์', price: '149 บาท', quantity: 1 })}
-          onRemove={() => handleRemoveItem({ name: 'อเมริกันบิ๊กไบท์' })}
-        />
-        <FoodSet
-          name="อิตาเลียน แฟลร์"
-          price="199 บาท"
-          description="พาสต้าเพสโต้, ขนมปังกระเทียม, ไวน์แดง"
-          image="src/Images/อิตาลี.png"
-          onAdd={() => handleAddItem({ name: 'อิตาเลียน แฟลร์', price: '199 บาท', quantity: 1 })}
-          onRemove={() => handleRemoveItem({ name: 'อิตาเลียน แฟลร์' })}
-        />
+        {data.map((i)=><FoodSet
+          name={i.name}
+          price={`${i.price} บาท`}
+          description={i.description}
+          image={i.image}
+          onAdd={() => handleAddItem({ name:i.name, price:i.price, quantity: 1 })}
+          onRemove={() => handleRemoveItem({ id:i._id})}
+          key={i.name} 
+        />)}
+        
       </div>
 
       {/* ปุ่ม Check the Order */}

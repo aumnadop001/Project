@@ -6,7 +6,7 @@ import { useSelectedItems } from '../useContext/SelectedItemsContext';
 const CheckOrder = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { selectedItems, replaceItem, removeItem } = useSelectedItems();
+  const { selectedItems, replaceItem, removeItem, removeAll } = useSelectedItems();
 
 
   // เพิ่มจำนวน
@@ -45,6 +45,7 @@ const CheckOrder = () => {
       icon: 'success',
       confirmButtonText: 'กลับไปยังหน้าแรก',
     }).then(() => {
+      removeAll()
       navigate('/'); // กลับไปหน้าแรกเมื่อผู้ใช้กด "OK"
     });
   };
